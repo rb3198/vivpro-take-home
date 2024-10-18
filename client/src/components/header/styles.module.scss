@@ -30,6 +30,16 @@
     }
 }
 
+#nav,
+#nav ul {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    @include media("sm", "tablet_portrait") {
+        flex-direction: column;
+    }
+}
+
 #nav {
     @include media("sm", "tablet_portrait") {
         padding: 0 5vw;
@@ -38,9 +48,12 @@
         right: 0;
         top: 0;
         bottom: 0;
-        height: 100;
         transform: translateX(100%);
         transition: transform .5s ease-in-out;
+        align-items: flex-start;
+        ul {
+            align-items: flex-start;
+        }
         @include themed() {
             background-color: getThemeColor("bg_0");
         }
@@ -56,6 +69,7 @@
 
 #close_container {
     display: none;
+    width: 100%;
     @include media("sm", "tablet_portrait") {
         display: flex;
         height: 7.5vh;
@@ -64,14 +78,6 @@
     }
     @include themed() {
         color: getThemeColor("text_0");
-    }
-}
-
-#nav, #nav ul{
-    display: flex;
-    list-style: none;
-    @include media("sm", "tablet_portrait") {
-        flex-direction: column;
     }
 }
 
