@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "NodeNext",
+        "lib": ["ES2021"],
+        "outDir": "./dest",
+        "target": "ES2017",
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "strictNullChecks": true,
+        "paths": {
+            "src/*": ["./src/*"]
+        }
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "include": ["src/**/*.ts"],
+}
