@@ -6,11 +6,13 @@ import { ThemeToggle } from "../theme_toggle";
 import { TbMenuDeep } from "react-icons/tb";
 import { BiX } from "react-icons/bi";
 import { Theme } from "../../theme";
+import { Link, useLocation } from "react-router-dom";
 
 export interface HeaderProps extends ThemedProps {}
 
 export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { pathname } = useLocation();
   const toggleMenuOpen = () => {
     setMenuOpen((prevState) => {
       const newState = !prevState;
@@ -32,8 +34,16 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
             <BiX size={32} onClick={toggleMenuOpen} />
           </div>
           <ul>
-            <li>Database</li>
-            <li>Analysis</li>
+            <li data-active={pathname === "/"} onClick={toggleMenuOpen}>
+              <Link to={"/"} className={styles.link}>
+                Database
+              </Link>
+            </li>
+            <li data-active={pathname === "/analysis"} onClick={toggleMenuOpen}>
+              <Link to={"/analysis"} className={styles.link}>
+                Analysis
+              </Link>
+            </li>
           </ul>
           <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
         </nav>
