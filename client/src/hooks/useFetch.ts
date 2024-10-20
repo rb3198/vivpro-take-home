@@ -10,13 +10,18 @@ export const useFetch = <T>() => {
       setLoading(true);
       try {
         const res = await fetch(url, {
-          method,
+          method: method.toUpperCase(),
           body,
+          headers:
+            method === "patch"
+              ? [["Content-Type", "application/json"]]
+              : undefined,
         });
         setData(await res.json());
-        setLoading(false);
       } catch (error) {
         setError(error);
+      } finally {
+        setLoading(false);
       }
     },
     []

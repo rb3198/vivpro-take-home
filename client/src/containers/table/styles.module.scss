@@ -126,3 +126,10 @@
         width: 3vmax;
     }
 }
+
+.page_no[data-selected="true"], .page_no:hover {
+    @include themed() {
+        background-color: getThemeColor("accent");
+        color: #fff;
+    }
+}

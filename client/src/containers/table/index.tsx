@@ -1,21 +1,41 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Track } from "../../types/track";
 import styles from "./styles.module.scss";
 import Loader from "../../components/loader";
 import { Tools } from "../../components/tools";
+import { Rating } from "../../components/rating";
+import { formatDuration } from "../../utils";
 
 export interface TableProps {
   tracks?: Track[];
   loadingTracks?: boolean;
   errorLoadingTracks?: boolean;
+  setTracks: (tracks: Track[]) => any;
 }
 
 export const Table: React.FC<TableProps> = ({
   tracks,
   loadingTracks,
   errorLoadingTracks,
+  setTracks,
 }) => {
   const [activePage, setActivePage] = useState(0);
+
+  const handleRating = useCallback(
+    (rating: number, id: string, idx: number) => {
+      if (!tracks) {
+        return;
+      }
+      const trackIdx = tracks.findIndex(
+        (track) => track.id === id && track.idx === idx
+      );
+      if (trackIdx > -1) {
+        tracks[trackIdx].rating = rating;
+        setTracks([...tracks]);
+      }
+    },
+    [tracks, setTracks]
+  );
 
   const pages = useMemo(() => {
     if (!tracks || !tracks.length) {
@@ -56,7 +76,7 @@ export const Table: React.FC<TableProps> = ({
         </thead>
         <tbody>
           {tracks.map((track) => {
-            const { id } = track;
+            const { id, rating, duration, idx: trackIdx } = track;
             return (
               <tr key={id}>
                 {Object.keys(columnNameMap).map((key, idx) => {
@@ -68,7 +88,18 @@ export const Table: React.FC<TableProps> = ({
                         (stickyIndices.has(idx) && styles.hor_fixed) || ""
                       }
                     >
-                      {track[key as keyof Track]}
+                      {key === "rating" ? (
+                        <Rating
+                          id={id}
+                          idx={trackIdx}
+                          rating={rating}
+                          setRating={handleRating}
+                        />
+                      ) : key === "duration" ? (
+                        formatDuration(duration)
+                      ) : (
+                        track[key as keyof Track]
+                      )}
                     </td>
                   );
                 })}
@@ -85,7 +116,12 @@ export const Table: React.FC<TableProps> = ({
       <div id={styles.page_opts}>
         <p id={styles.page_opts_label}>Page:</p>
         {pages.map((_, idx) => (
-          <div onClick={() => setActivePage(idx)} className={styles.page_no}>
+          <div
+            key={idx}
+            onClick={() => setActivePage(idx)}
+            className={styles.page_no}
+            data-selected={activePage === idx}
+          >
             {idx + 1}
           </div>
         ))}
