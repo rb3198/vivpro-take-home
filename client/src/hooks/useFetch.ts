@@ -18,6 +18,7 @@ export const useFetch = <T>() => {
               : undefined,
         });
         setData(await res.json());
+        setError(null);
       } catch (error) {
         setError(error);
       } finally {

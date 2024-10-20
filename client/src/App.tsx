@@ -15,13 +15,18 @@ const App: React.FC<AppProps> = (props) => {
   const { theme, toggleTheme } = props;
   const [tracks, setTracks] = useState<Track[]>([]);
   const {
-    fetch: fetchTracks,
+    fetch: fetchTracksHook,
     data,
     error,
     loading: loadingTracks,
   } = useFetch<Track[]>();
+
+  const fetchTracks = () => {
+    fetchTracksHook(TRACKS_ENDPOINT, "get");
+  };
+
   useEffect(() => {
-    fetchTracks(TRACKS_ENDPOINT, "get");
+    fetchTracks();
   }, []);
   useEffect(() => {
     data && setTracks(data);
@@ -39,6 +44,7 @@ const App: React.FC<AppProps> = (props) => {
               errorLoadingTracks={error}
               loadingTracks={loadingTracks}
               setTracks={setTracks}
+              fetchTracks={fetchTracks}
             />
           ),
         },
