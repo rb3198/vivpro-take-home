@@ -135,7 +135,8 @@
 
 .page_no[data-selected="true"], .page_no:hover {
     @include themed() {
-        background-color: getThemeColor("accent");
+        background-color: getThemeColor("third");
+        border: 2px solid getThemeColor("third");
         color: #fff;
     }
 }
@@ -170,7 +171,7 @@
 }
 
 .sort_arrow {
-    transition: transform .5s ease-in-out;
+    transition: transform .25s ease-in-out;
     margin-left: .618rem;
 }
 

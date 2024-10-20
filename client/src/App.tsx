@@ -21,8 +21,8 @@ const App: React.FC<AppProps> = (props) => {
     loading: loadingTracks,
   } = useFetch<Track[]>();
 
-  const fetchTracks = () => {
-    fetchTracksHook(TRACKS_ENDPOINT, "get");
+  const fetchTracks = (title?: string) => {
+    fetchTracksHook(TRACKS_ENDPOINT + (title ? `?title=${title}` : ""), "get");
   };
 
   useEffect(() => {

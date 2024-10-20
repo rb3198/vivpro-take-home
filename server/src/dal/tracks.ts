@@ -35,8 +35,8 @@ export class TracksDAL {
         WHERE 1 = 1`;
     const params: (string | number)[] = [];
     if (title) {
-      sql += ` AND title = ?`;
-      params.push(title);
+      sql += ` AND title LIKE ?`;
+      params.push(`%${title}%`);
     }
     if (typeof offset === "number" && !isNaN(offset)) {
       sql += ` AND idx >= ?`;

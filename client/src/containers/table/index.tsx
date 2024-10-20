@@ -12,7 +12,7 @@ export interface TableProps {
   loadingTracks?: boolean;
   errorLoadingTracks?: boolean;
   setTracks: (tracks: Track[]) => any;
-  fetchTracks: () => void;
+  fetchTracks: (title?: string) => void;
 }
 
 export const Table: React.FC<TableProps> = ({
@@ -23,6 +23,7 @@ export const Table: React.FC<TableProps> = ({
   setTracks,
 }) => {
   const [activePage, setActivePage] = useState(0);
+  const [searchTitle, setSearchTitle] = useState("");
   const [sortedByKey, setSortedByKey] = useState<keyof Track>("idx");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
@@ -42,16 +43,23 @@ export const Table: React.FC<TableProps> = ({
     [tracks, setTracks]
   );
 
+  const searchSongs = () => {
+    fetchTracks(searchTitle);
+    setActivePage(0);
+    setSortOrder("asc");
+    setSortedByKey("idx");
+  };
+
   const pages = useMemo(() => {
     if (!tracks || !tracks.length) {
       return [];
     }
-    const nPages = Math.ceil(tracks.length / 10);
+    const pageSize = 10;
     const arr: Track[][] = [];
     let curArr: Track[] = [];
     for (let i = 0; i < tracks.length; i++) {
       curArr.push(tracks[i]);
-      if (i !== 0 && (i + 1) % nPages === 0) {
+      if (i !== 0 && (i + 1) % pageSize === 0) {
         arr.push(curArr);
         curArr = [];
         continue;
@@ -93,8 +101,8 @@ export const Table: React.FC<TableProps> = ({
   const renderTable = () => {
     const { columnNameMap } = Track;
     const stickyIndices = new Set([1]);
-    if (!pages || !pages.length) return;
-    const tracks = pages[activePage];
+    if (!pages) return;
+    const tracks = pages[activePage] || [];
     return (
       <table id={styles.track_table}>
         <thead>
@@ -174,13 +182,18 @@ export const Table: React.FC<TableProps> = ({
   const renderBody = () => {
     return (
       <>
-        <Tools tracks={tracks} />
-        {pages && pages.length && (
+        <Tools
+          tracks={tracks}
+          searchTitle={searchTitle}
+          setSearchTitle={setSearchTitle}
+          searchSongs={searchSongs}
+        />
+        {(pages && (
           <>
             {renderTable()}
             {renderPageOpts()}
           </>
-        )}
+        )) || <></>}
       </>
     );
   };
@@ -189,7 +202,7 @@ export const Table: React.FC<TableProps> = ({
     return (
       <div id={styles.error_container}>
         <h3>Error encountered while fetching the tracks.</h3>
-        <button onClick={fetchTracks}>Try Again</button>
+        <button onClick={searchSongs}>Try Again</button>
       </div>
     );
   };
