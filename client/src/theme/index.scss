@@ -1,5 +1,6 @@
 @use "sass:map";
 @use "sass:color";
+@use "./screens" as *;
 @use "./z_levels" as *;
 
 $themes: (
@@ -53,13 +54,15 @@ $themes: (
 }
 
 :global(.theme--dark)[data-nav-menu-open="true"]::after, :global(.theme--light)[data-nav-menu-open="true"]::after {
-    position: absolute;
-    content: "";
-    display: block;
-    z-index: map.get($z_levels, 1);
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, .5);
+    @include media("sm", "tablet_portrait") {
+        position: absolute;
+        content: "";
+        display: block;
+        z-index: map.get($z_levels, 1);
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, .5);
+    }
 }

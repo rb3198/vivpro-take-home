@@ -92,8 +92,15 @@
     }
 }
 
-#nav > ul > li[data-active="true"], #nav>ul>li:hover {
+#nav > ul > li[data-active="true"] .link , #nav>ul>li:hover .link {
     @include themed() {
         color: getThemeColor("text_0");
+    }
+}
+
+.link {
+    text-decoration: none;
+    @include themed() {
+        color: getThemeColor("text_1");
     }
 }
