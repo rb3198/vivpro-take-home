@@ -82,6 +82,9 @@ $height: 3rem;
     font-size: 1.309rem;
     padding-right: .309rem;
     padding-top: 0.309rem;
+    @include media("mobile") {
+        font-size: 1rem;
+    }
 }
 
 #search_box svg {
