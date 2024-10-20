@@ -66,4 +66,27 @@ export class Track {
     this.numSegments = numSegments;
     this.class = trackClass;
   }
+
+  static columnNameMap: Record<keyof Track, string> = {
+    idx: "Index",
+    title: "Title",
+    rating: "Rating",
+    duration: "Duration",
+    id: "ID",
+    class: "Class",
+    acousticness: "Acousticness",
+    danceability: "Danceability",
+    energy: "Energy",
+    instrumentalness: "Instrumentalness",
+    key: "Key",
+    liveness: "Liveliness",
+    loudness: "Loudness",
+    mode: "Mode",
+    numBars: "# of Bars",
+    numSections: "# of Sections",
+    numSegments: "# of Segments",
+    tempo: "Tempo",
+    timeSignature: "Signature",
+    valence: "Valence",
+  };
 }

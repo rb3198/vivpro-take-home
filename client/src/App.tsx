@@ -7,21 +7,30 @@ import { Table } from "./containers/table";
 import { Analysis } from "./containers/analysis";
 import { useFetch } from "./hooks/useFetch";
 import { Track } from "./types/track";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { TRACKS_ENDPOINT } from "./constants/endpoints";
 
 interface AppProps extends ThemedProps {}
 const App: React.FC<AppProps> = (props) => {
   const { theme, toggleTheme } = props;
+  const [tracks, setTracks] = useState<Track[]>([]);
   const {
-    fetch: fetchTracks,
-    data: tracks,
+    fetch: fetchTracksHook,
+    data,
     error,
     loading: loadingTracks,
   } = useFetch<Track[]>();
+
+  const fetchTracks = (title?: string) => {
+    fetchTracksHook(TRACKS_ENDPOINT + (title ? `?title=${title}` : ""), "get");
+  };
+
   useEffect(() => {
-    fetchTracks(TRACKS_ENDPOINT, "get");
+    fetchTracks();
   }, []);
+  useEffect(() => {
+    data && setTracks(data);
+  }, [data]);
   const router = createBrowserRouter([
     {
       path: "/",
@@ -34,6 +43,8 @@ const App: React.FC<AppProps> = (props) => {
               tracks={tracks}
               errorLoadingTracks={error}
               loadingTracks={loadingTracks}
+              setTracks={setTracks}
+              fetchTracks={fetchTracks}
             />
           ),
         },

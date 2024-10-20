@@ -31,10 +31,16 @@ await tracksBl.writeTracksFromFileToDb(
 const tracksController = new TracksController(tracksBl);
 
 const server = http.createServer(async (req, res) => {
-  const { url: urlString } = req;
+  const { url: urlString, method } = req;
   res.setHeader("Content-Type", "application/json");
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
   res.setHeader("Access-Control-Allow-Methods", "GET, PATCH");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (method === "OPTIONS") {
+    res.statusCode = StatusCodes.NO_CONTENT;
+    res.end();
+    return;
+  }
   if (!urlString) {
     res.statusCode = StatusCodes.BAD_REQUEST;
     return res.end(

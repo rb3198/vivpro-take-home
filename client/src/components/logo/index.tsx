@@ -24,7 +24,7 @@ export const Logo: React.FC<{ theme?: Theme }> = ({ theme }) => {
   return (
     <div id={styles.container}>
       <LogoImg fill={theme === Theme.Dark ? "#fff" : "#000"} />
-      <p>
+      <p id={styles.logo_p}>
         viv
         <span>tracks</span>
       </p>
