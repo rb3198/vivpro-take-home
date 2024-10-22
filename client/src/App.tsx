@@ -50,7 +50,7 @@ const App: React.FC<AppProps> = (props) => {
         },
         {
           path: "analysis",
-          element: <Analysis />,
+          element: <Analysis tracks={tracks} />,
         },
       ],
     },

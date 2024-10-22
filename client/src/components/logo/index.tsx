@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./styles.module.scss";
 import { Theme } from "../../theme";
+import { Link } from "react-router-dom";
 
 const LogoImg: React.FC<{ fill: string }> = ({ fill }) => {
   return (
@@ -23,11 +24,13 @@ const LogoImg: React.FC<{ fill: string }> = ({ fill }) => {
 export const Logo: React.FC<{ theme?: Theme }> = ({ theme }) => {
   return (
     <div id={styles.container}>
-      <LogoImg fill={theme === Theme.Dark ? "#fff" : "#000"} />
-      <p id={styles.logo_p}>
-        viv
-        <span>tracks</span>
-      </p>
+      <Link to={"/"} id={styles.link}>
+        <LogoImg fill={theme === Theme.Dark ? "#fff" : "#000"} />
+        <p id={styles.logo_p}>
+          viv
+          <span>tracks</span>
+        </p>
+      </Link>
     </div>
   );
 };
