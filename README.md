@@ -61,6 +61,7 @@ You can now view the assignment in your browser in the path specified by the vit
    2. You can view histograms for any of the columns in the database.
    3. I've implemented both light and dark themes. View at your pleasure.
    4. Error handling and retrying for the API.
+   5. The Website is **fully responsive**.
 4. When you search, the downloaded CSV only contains the tracks in the search results. This is by design.
 
 ## Potential Pain Points While Running The App
