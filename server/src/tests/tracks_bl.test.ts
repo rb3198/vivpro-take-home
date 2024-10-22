@@ -8,7 +8,7 @@ import {
   Mocked,
 } from "vitest";
 
-import fs, { existsSync } from "fs";
+import fs from "fs";
 
 // Mock external dependencies
 jest.mock("fs", () => ({
@@ -18,7 +18,7 @@ jest.mock("fs", () => ({
   }),
   readFile: jest.fn(),
 }));
-import jsonPatch, { Operation } from "fast-json-patch";
+import { Operation } from "fast-json-patch";
 import { TracksBL } from "../business/index.js";
 import { TracksDAL } from "../dal/index.js";
 import { Track } from "../entities/track.js";
