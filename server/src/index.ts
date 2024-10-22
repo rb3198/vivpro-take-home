@@ -7,8 +7,11 @@ import { TRACKS_ENDPOINT } from "./constants/endpoints.js";
 import { TracksBL } from "./business/index.js";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
+import { CLIENT_PORT } from "./constants/ports.js";
 
 const { ArgumentParser } = argparse;
+
+const PORT = process.env.PORT || 3000;
 
 const parser = new ArgumentParser({
   description:
@@ -33,7 +36,10 @@ const tracksController = new TracksController(tracksBl);
 const server = http.createServer(async (req, res) => {
   const { url: urlString, method } = req;
   res.setHeader("Content-Type", "application/json");
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    `http://localhost:${CLIENT_PORT}`
+  );
   res.setHeader("Access-Control-Allow-Methods", "GET, PATCH");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   if (method === "OPTIONS") {
@@ -58,7 +64,7 @@ const server = http.createServer(async (req, res) => {
       break;
     case "/api/tracks":
       res.writeHead(StatusCodes.MOVED_PERMANENTLY, {
-        Location: "http://localhost:3000" + TRACKS_ENDPOINT,
+        Location: "http://localhost:" + PORT + TRACKS_ENDPOINT,
       });
       return res.end();
     default:
@@ -71,8 +77,6 @@ const server = http.createServer(async (req, res) => {
       );
   }
 });
-
-const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
   console.info("Server running on port", PORT);

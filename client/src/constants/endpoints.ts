@@ -1,1 +1,3 @@
-export const TRACKS_ENDPOINT = "http://localhost:3000/api/tracks/";
+const SERVER_PORT = 3000;
+
+export const TRACKS_ENDPOINT = `http://localhost:${SERVER_PORT}/api/tracks/`;
