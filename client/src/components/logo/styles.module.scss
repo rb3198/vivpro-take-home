@@ -3,8 +3,6 @@
 $size: 2.5rem;
 
 #container {
-    display: flex;
-    align-items: center;
     @include themed() {
         color: getThemeColor("text_0");
     }
@@ -26,4 +24,11 @@ $size: 2.5rem;
 #logo_p span {
     font-weight: 400;
     font-style: italic;
+}
+
+#link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
 }
