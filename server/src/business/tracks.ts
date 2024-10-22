@@ -43,6 +43,9 @@ export class TracksBL {
       "class",
     ];
     const idLength = data["id"] && Object.keys(data["id"]).length;
+    if (!idLength) {
+      return false;
+    }
     return requiredKeys.every(
       (key) =>
         key in data &&
@@ -50,7 +53,7 @@ export class TracksBL {
         Object.keys(data[key]).every((key) => !isNaN(parseInt(key)))
     );
   }
-  private readFile(filePath: string) {
+  readFile(filePath: string) {
     const fileExists = fs.existsSync(filePath);
     if (!fileExists) {
       throw new StartupError("The specified file does not exist.");

@@ -7,20 +7,20 @@ import { TracksBL } from "../business/tracks.js";
 import jsonPatch from "fast-json-patch";
 import { RequestError } from "../entities/errors/request_error.js";
 
-const getRequestBody = async (req: IncomingMessage) => {
-  const body: any[] = [];
-  await new Promise<void>((resolve) => {
-    req.on("data", (chunk) => body.push(chunk));
-    req.on("end", () => resolve());
-  });
-  return JSON.parse(Buffer.concat(body).toString()) as jsonPatch.Operation[];
-};
-
 export class TracksController implements IController {
-  TracksBL: TracksBL;
-  constructor(TracksBL: TracksBL) {
-    this.TracksBL = TracksBL;
+  tracksBl: TracksBL;
+  constructor(tracksBl: TracksBL) {
+    this.tracksBl = tracksBl;
   }
+  getRequestBody = async (req: IncomingMessage) => {
+    const body: any[] = [];
+    await new Promise<void>((resolve) => {
+      req.on("data", (chunk) => body.push(chunk));
+      req.on("end", () => resolve());
+    });
+    return JSON.parse(Buffer.concat(body).toString()) as jsonPatch.Operation[];
+  };
+
   get: RequestListener<typeof IncomingMessage, typeof ServerResponse> = async (
     req,
     res
@@ -47,12 +47,13 @@ export class TracksController implements IController {
     offset = parseInt(offset ?? "NaN");
     limit = parseInt(limit ?? "NaN");
     try {
-      const rows = await this.TracksBL.get(title, offset, limit);
+      const rows = await this.tracksBl.get(title, offset, limit);
       res.setHeader("Set-Cookie", "test=1");
+      res.statusCode = StatusCodes.OK;
       res.write(JSON.stringify(rows));
       res.end();
     } catch (error) {
-      res.statusCode = 500;
+      res.statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
       res.end(
         JSON.stringify({
           err: "An Unknown Error occurred. Please try again.",
@@ -92,8 +93,8 @@ export class TracksController implements IController {
         );
       }
       try {
-        const body = await getRequestBody(req);
-        const success = await this.TracksBL.update(id, parseInt(idx), body);
+        const body = await this.getRequestBody(req);
+        const success = await this.tracksBl.update(id, parseInt(idx), body);
         if (success) {
           res.statusCode = StatusCodes.OK;
           return res.end(

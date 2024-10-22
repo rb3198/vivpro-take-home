@@ -37,6 +37,7 @@ npm run dev -f <file_path_relative to the server/src/index.ts file>
 
 - The server should be up and running on **Port 3000**.
 - A new Database file should be created when you run the server for the very first time, or run the server post deleting the database file.
+- This is because the server reads the file provided when it starts up, and optionally inserts the rows into the DB if they don't exist.
 
 5. **Start the React App** by using the following commands from the root:
 
