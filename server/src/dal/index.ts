@@ -20,6 +20,21 @@ export const connectToDatabase = (): Promise<sqlite3.Database> => {
   });
 };
 
+// const setup
+const setupRatingsTable = async (db: sqlite3.Database) => {
+  const sql =
+    "CREATE TABLE IF NOT EXISTS ratings (track_id VARCHAR, rating INTEGER, FOREIGN KEY(track_id) REFERENCES tracks(id));";
+  return new Promise<void>((resolve, reject) => {
+    db.exec(sql, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+
 export const setupTables = (db: sqlite3.Database): Promise<void> => {
   const sql = `
           CREATE TABLE IF NOT EXISTS tracks
@@ -27,7 +42,6 @@ export const setupTables = (db: sqlite3.Database): Promise<void> => {
             idx INTEGER,
             id VARCHAR,
             title VARCHAR,
-            rating INTEGER DEFAULT -1,
             danceability REAL,
             energy REAL,
             key INTEGER,
@@ -45,14 +59,19 @@ export const setupTables = (db: sqlite3.Database): Promise<void> => {
             num_segments INTEGER,
             class INTEGER,
             PRIMARY KEY (idx, id)
-          )
+          );
       `;
   return new Promise((resolve, reject) => {
     db.run(sql, (err) => {
       if (err) {
         reject(err);
       } else {
-        resolve();
+        try {
+          setupRatingsTable(db);
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
       }
     });
   });
