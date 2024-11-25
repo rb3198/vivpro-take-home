@@ -14,7 +14,7 @@ export class TracksDAL {
             idx,
             id,
             title,
-            rating,
+            j.avg_rating,
             danceability,
             energy,
             key,
@@ -31,7 +31,9 @@ export class TracksDAL {
             num_sections AS numSections,
             num_segments AS numSegments,
             class
-        FROM tracks
+        FROM tracks t
+        LEFT OUTER JOIN (SELECT AVG(rating) as avg_rating, track_id FROM ratings GROUP BY track_id) as j
+        ON t.id = j.track_id
         WHERE 1 = 1`;
     const params: (string | number)[] = [];
     if (title) {
@@ -64,7 +66,6 @@ export class TracksDAL {
         idx,
         id,
         title,
-        rating,
         danceability,
         energy,
         key,
@@ -80,8 +81,11 @@ export class TracksDAL {
         num_bars AS numBars,
         num_sections AS numSections,
         num_segments AS numSegments,
-        class
-    FROM tracks
+        class,
+        j.avg_rating
+    FROM tracks t
+    JOIN (SELECT AVG(rating) as avg_rating, track_id FROM ratings WHERE track_id = t.id GROUP BY track_id) as j
+    ON t.id = j.track_id
     WHERE id = ? AND idx = ?`;
     const params = [id, idx];
     return new Promise<Track | undefined>((resolve, reject) => {
@@ -90,6 +94,34 @@ export class TracksDAL {
           reject(err);
         } else {
           resolve(track);
+        }
+      });
+    });
+  }
+
+  async createTable() {
+    const sql =
+      "CREATE TABLE ratings (track_id INTEGER, rating INTEGER, FOREIGN KEY track_id REFERENCES tracks.id)";
+    return new Promise<void>((resolve, reject) => {
+      this.db.exec(sql, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+
+  async addRating(trackId: number, rating: number) {
+    const sql = "INSERT INTO ratings VALUES (?, ?) ON DUPLICATE UPDATE";
+    const params = [trackId, rating];
+    return new Promise<void>((resolve, reject) => {
+      this.db.run(sql, params, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
         }
       });
     });
